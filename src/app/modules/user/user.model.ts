@@ -3,33 +3,38 @@ import { TUser } from './user.interface';
 import bcrypt from 'bcrypt';
 import config from '../../config';
 
-const userSchema = new Schema<TUser>({
-  id: {
-    type: String,
-    required: true,
+const userSchema = new Schema<TUser>(
+  {
+    id: {
+      type: String,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    needPasswordChange: {
+      type: Boolean,
+      default: true,
+    },
+    role: {
+      type: String,
+      enum: ['student', 'faculty', 'admin'],
+    },
+    status: {
+      type: String,
+      enum: ['in-progress', 'blocked'],
+      default: 'in-progress',
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
-  password: {
-    type: String,
-    required: true,
+  {
+    timestamps: true,
   },
-  needPasswordChange: {
-    type: Boolean,
-    default: true,
-  },
-  role: {
-    type: String,
-    enum: ['student', 'faculty', 'admin'],
-  },
-  status: {
-    type: String,
-    enum: ['in-progress', 'blocked'],
-    default: 'in-progress',
-  },
-  isDeleted: {
-    type: Boolean,
-    default: false,
-  },
-});
+);
 
 userSchema.pre('save', async function (next) {
   const user = this; // doc

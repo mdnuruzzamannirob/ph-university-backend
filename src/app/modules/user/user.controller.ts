@@ -5,7 +5,8 @@ import httpStatus from 'http-status';
 
 const createStudent: RequestHandler = async (req, res, next) => {
   try {
-    const { password, student: studentData } = req.body;
+    const studentData = req.body;
+    const { password } = req.body;
 
     // const zodParsedData = studentValidationSchema.parse(studentData);
 
