@@ -1,6 +1,6 @@
 import config from '../../config';
 import { TStudent } from '../student/student.interface';
-import { Student } from '../student/student.model';
+import { StudentModel } from '../student/student.model';
 import { TUser } from './user.interface';
 import { UserModel } from './user.model';
 
@@ -24,7 +24,7 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
     studentData.id = result.id;
     studentData.user = result._id;
 
-    const newStudent = await Student.create(studentData);
+    const newStudent = await StudentModel.create(studentData);
     return newStudent;
   }
 };
