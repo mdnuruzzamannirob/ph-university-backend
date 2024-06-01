@@ -1,4 +1,5 @@
 import {
+  TAcademicSemesterNameCodeChecker,
   TSemesterCode,
   TSemesterMonths,
   TSemesterName,
@@ -22,3 +23,10 @@ export const semesterMonths: TSemesterMonths[] = [
   'November',
   'December',
 ];
+
+export const academicSemesterNameCodeChecker: TAcademicSemesterNameCodeChecker =
+  {
+    Autumn: '01',
+    Summer: '02',
+    Fall: '03',
+  };
