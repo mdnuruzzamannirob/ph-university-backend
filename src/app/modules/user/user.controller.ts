@@ -1,5 +1,5 @@
 import { UserServices } from './user.service';
-import sendResponse from '../../utils/sendResponse';
+import responseHandler from '../../utils/responseHandler';
 import httpStatus from 'http-status';
 import asyncFunctionHandler from '../../utils/asyncFunctionHandler';
 
@@ -11,7 +11,7 @@ const createStudent = asyncFunctionHandler(async (req, res) => {
 
   const result = await UserServices.createStudentIntoDB(password, studentData);
 
-  sendResponse(res, {
+  responseHandler(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Student is created successfully',

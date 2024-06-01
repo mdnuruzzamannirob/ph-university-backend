@@ -1,13 +1,13 @@
 import httpStatus from 'http-status';
 import { StudentServices } from './student.service';
-import sendResponse from '../../utils/sendResponse';
+import responseHandler from '../../utils/responseHandler';
 import asyncFunctionHandler from '../../utils/asyncFunctionHandler';
 
 const getSingleStudent = asyncFunctionHandler(async (req, res) => {
   const { studentId } = req.params;
   const result = await StudentServices.getSingleStudentFromDB(studentId);
 
-  sendResponse(res, {
+  responseHandler(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Student is retrieved successfully',
@@ -18,7 +18,7 @@ const getSingleStudent = asyncFunctionHandler(async (req, res) => {
 const getAllStudents = asyncFunctionHandler(async (req, res) => {
   const result = await StudentServices.getAllStudentsFromDB();
 
-  sendResponse(res, {
+  responseHandler(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Student are retrieved successfully',
@@ -30,7 +30,7 @@ const deleteStudent = asyncFunctionHandler(async (req, res) => {
   const { studentId } = req.params;
   const result = await StudentServices.deleteStudentFromDB(studentId);
 
-  sendResponse(res, {
+  responseHandler(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Student is deleted successfully',
