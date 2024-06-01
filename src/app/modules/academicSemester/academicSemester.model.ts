@@ -39,6 +39,6 @@ const academicSemesterSchema = new Schema<TAcademicSemester>(
 );
 
 export const AcademicSemesterModel = model<TAcademicSemester>(
-  'AcademicSemester',
+  'Academic-Semester',
   academicSemesterSchema,
 );
