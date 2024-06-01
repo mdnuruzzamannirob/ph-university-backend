@@ -22,7 +22,7 @@ const getAllAcademicSemester = asyncFunctionHandler(async (req, res) => {
   responseHandler(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Academic semesters is fetched successfully',
+    message: 'All Academic semester fetched successfully',
     data: result,
   });
 });

@@ -51,6 +51,29 @@ academicSemesterSchema.pre('save', async function (next) {
   next();
 });
 
+// Pre-hook for findOneAndUpdate
+academicSemesterSchema.pre('findOneAndUpdate', async function (next) {
+  const update = this.getUpdate() as Partial<TAcademicSemester>;
+
+  // Extracting name and year from the update object
+  const name = update.name;
+  const year = update.year;
+
+  // Checking if the name and year are being updated
+  if (name && year) {
+    const isSemesterExist = await AcademicSemesterModel.findOne({
+      name,
+      year,
+    });
+
+    if (isSemesterExist) {
+      throw new Error('Semester already exists !');
+    }
+  }
+
+  next();
+});
+
 export const AcademicSemesterModel = model<TAcademicSemester>(
   'Academic-Semester',
   academicSemesterSchema,
