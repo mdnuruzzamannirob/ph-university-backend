@@ -19,6 +19,6 @@ const createStudent = asyncFunctionHandler(async (req, res) => {
   });
 });
 
-export const UserController = {
+export const UserControllers = {
   createStudent,
 };
