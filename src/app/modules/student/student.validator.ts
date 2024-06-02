@@ -193,13 +193,11 @@ const studentValidationSchema = z.object({
 
   admissionSemester: z
     .string({
-      invalid_type_error: 'Address must be string',
-      required_error: 'Address is required',
+      invalid_type_error: 'AdmissionSemester must be string',
+      required_error: 'Admission Semester is required',
     })
     .trim()
     .optional(),
-
-  academicDepartment: objectId.optional(),
 
   isDeleted: z.boolean().optional().default(false),
 });
