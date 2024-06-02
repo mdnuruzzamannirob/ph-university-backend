@@ -20,8 +20,9 @@ const userNameSchema = z.object({
     }),
 
   middleName: z
-    .string()
+    .string({ invalid_type_error: 'Middle Name must be string' })
     .trim()
+    .max(20, { message: 'Name can not be more than 20 characters' })
     .refine((value) => /^[A-Z]/.test(value), {
       message: 'Middle Name must start with a capital letter',
     })
@@ -114,7 +115,7 @@ const localGuardianSchema = z.object({
     .trim(),
 });
 
-const studentValidationSchema = z.object({
+const createStudentValidationSchema = z.object({
   id: z
     .string({
       invalid_type_error: 'id must be string',
@@ -140,7 +141,6 @@ const studentValidationSchema = z.object({
   dateOfBirth: z
     .string({
       invalid_type_error: 'Date of birth must be string',
-      required_error: 'Date of birth is required',
     })
     .trim()
     .optional(),
@@ -186,7 +186,6 @@ const studentValidationSchema = z.object({
   profileImg: z
     .string({
       invalid_type_error: 'Profile image must be string',
-      required_error: 'Profile image is required',
     })
     .trim()
     .optional(),
@@ -194,7 +193,6 @@ const studentValidationSchema = z.object({
   admissionSemester: z
     .string({
       invalid_type_error: 'AdmissionSemester must be string',
-      required_error: 'Admission Semester is required',
     })
     .trim()
     .optional(),
@@ -202,4 +200,6 @@ const studentValidationSchema = z.object({
   isDeleted: z.boolean().optional().default(false),
 });
 
-export default studentValidationSchema;
+export const StudentValidations = {
+  createStudentValidationSchema,
+};

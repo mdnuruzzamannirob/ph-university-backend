@@ -7,8 +7,6 @@ const createStudent = asyncFunctionHandler(async (req, res) => {
   const studentData = req.body;
   const { password } = req.body;
 
-  // const zodParsedData = studentValidationSchema.parse(studentData);
-
   const result = await UserServices.createStudentIntoDB(password, studentData);
 
   responseHandler(res, {
