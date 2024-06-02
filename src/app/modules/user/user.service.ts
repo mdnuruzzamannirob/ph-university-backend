@@ -8,14 +8,12 @@ import { UserModel } from './user.model';
 import { generateStudentId } from './user.utils';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
-  // create a user object
-  const userData: Partial<TUser> = {};
+  // find email exist or not
+  const emailExists = await StudentModel.findOne({ email: payload.email });
 
-  // if password not given, use default password
-  userData.password = password || (config.default_password as string);
-
-  // set a role
-  userData.role = 'student';
+  if (emailExists) {
+    throw new Error('Email already exists !');
+  }
 
   // find academic semester information
   const admissionSemester = (await AcademicSemesterModel.findById(
@@ -26,11 +24,17 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     throw new Error('Admission semester not found');
   }
 
+  // create a user object
+  const userData: Partial<TUser> = {};
+
+  // if password not given, use default password
+  userData.password = password || (config.default_password as string);
+
+  // set a role
+  userData.role = 'student';
+
   // set automatic generated id
   userData.id = await generateStudentId(admissionSemester);
-
-  // set manually generated id
-  // userData.id = '20240002';
 
   const newUser = await UserModel.create(userData);
 
@@ -43,7 +47,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     return newStudent;
   }
 
-  throw new Error('Failed to create new user');
+  throw new Error('Failed to create a new user');
 };
 
 export const UserServices = {

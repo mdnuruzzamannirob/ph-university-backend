@@ -116,14 +116,11 @@ const localGuardianSchema = z.object({
 });
 
 const createStudentValidationSchema = z.object({
-  id: z
-    .string({
-      invalid_type_error: 'id must be string',
-      required_error: 'id is required',
-    })
-    .trim(),
-
-  user: objectId,
+  password: z
+    .string({ invalid_type_error: 'password must be string' })
+    .min(8, { message: 'Password can not be less than 8 characters' })
+    .max(20, { message: 'Password can not be more than 20 characters' })
+    .optional(),
 
   email: z
     .string({
