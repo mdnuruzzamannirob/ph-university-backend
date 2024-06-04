@@ -1,10 +1,10 @@
 import responseHandler from '../../utils/responseHandler';
 import httpStatus from 'http-status';
 import asyncFunctionHandler from '../../utils/asyncFunctionHandler';
-import { academicSemesterServices } from './academicSemester.service';
+import { AcademicSemesterServices } from './academicSemester.service';
 
 const createAcademicSemester = asyncFunctionHandler(async (req, res) => {
-  const result = await academicSemesterServices.createAcademicSemesterIntoDB(
+  const result = await AcademicSemesterServices.createAcademicSemesterIntoDB(
     req.body,
   );
 
@@ -17,7 +17,7 @@ const createAcademicSemester = asyncFunctionHandler(async (req, res) => {
 });
 
 const getAllAcademicSemester = asyncFunctionHandler(async (req, res) => {
-  const result = await academicSemesterServices.getAllAcademicSemesterFromDB();
+  const result = await AcademicSemesterServices.getAllAcademicSemesterFromDB();
 
   responseHandler(res, {
     statusCode: httpStatus.OK,
@@ -31,7 +31,7 @@ const getSingleAcademicSemester = asyncFunctionHandler(async (req, res) => {
   const { semesterId } = req.params;
 
   const result =
-    await academicSemesterServices.getSingleAcademicSemesterFromDB(semesterId);
+    await AcademicSemesterServices.getSingleAcademicSemesterFromDB(semesterId);
 
   responseHandler(res, {
     statusCode: httpStatus.OK,
@@ -44,7 +44,7 @@ const getSingleAcademicSemester = asyncFunctionHandler(async (req, res) => {
 const updateAcademicSemester = asyncFunctionHandler(async (req, res) => {
   const { semesterId } = req.params;
 
-  const result = await academicSemesterServices.updateAcademicSemesterIntoDB(
+  const result = await AcademicSemesterServices.updateAcademicSemesterIntoDB(
     semesterId,
     req.body,
   );
@@ -57,7 +57,7 @@ const updateAcademicSemester = asyncFunctionHandler(async (req, res) => {
   });
 });
 
-export const academicSemesterControllers = {
+export const AcademicSemesterControllers = {
   createAcademicSemester,
   getAllAcademicSemester,
   getSingleAcademicSemester,
