@@ -115,6 +115,92 @@ const createLocalGuardianSchema = z.object({
     .trim(),
 });
 
+const createStudentValidationSchema = z.object({
+  password: z
+    .string({ invalid_type_error: 'password must be string' })
+    .min(8, { message: 'Password can not be less than 8 characters' })
+    .max(20, { message: 'Password can not be more than 20 characters' })
+    .optional(),
+
+  email: z
+    .string({
+      required_error: 'Email is required',
+    })
+    .trim()
+    .email({ message: 'Invalid email format' }),
+
+  name: createUserNameSchema,
+
+  gender: z.enum(['male', 'female', 'other'], {
+    errorMap: () => ({ message: 'Invalid gender' }),
+  }),
+
+  dateOfBirth: z
+    .string({
+      invalid_type_error: 'Date of birth must be string',
+    })
+    .trim()
+    .optional(),
+
+  contactNo: z
+    .string({
+      invalid_type_error: 'Contact No must be string',
+      required_error: 'Contact No is required',
+    })
+    .trim(),
+
+  emergencyContactNo: z
+    .string({
+      invalid_type_error: 'Emergency Contact No must be string',
+      required_error: 'Emergency Contact No is required',
+    })
+    .trim(),
+
+  bloodGroup: z
+    .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'], {
+      errorMap: () => ({ message: 'Invalid blood group' }),
+    })
+    .optional(),
+
+  presentAddress: z
+    .string({
+      invalid_type_error: 'Present address must be string',
+      required_error: 'Present address is required',
+    })
+    .trim(),
+
+  permanentAddress: z
+    .string({
+      invalid_type_error: 'Permanent address must be string',
+      required_error: 'Permanent address is required',
+    })
+    .trim(),
+
+  guardian: createGuardianSchema,
+
+  localGuardian: createLocalGuardianSchema,
+
+  profileImg: z
+    .string({
+      invalid_type_error: 'Profile image must be string',
+    })
+    .trim()
+    .optional(),
+
+  admissionSemester: z
+    .string({
+      invalid_type_error: 'Admission semester must be string',
+    })
+    .trim(),
+  academicDepartment: z
+    .string({
+      invalid_type_error: 'Academic department must be string',
+    })
+    .trim(),
+
+  isDeleted: z.boolean().optional().default(false),
+});
+
 const updateUserNameSchema = z.object({
   firstName: z
     .string({
@@ -224,88 +310,6 @@ const updateLocalGuardianSchema = z.object({
     .optional(),
 });
 
-const createStudentValidationSchema = z.object({
-  password: z
-    .string({ invalid_type_error: 'password must be string' })
-    .min(8, { message: 'Password can not be less than 8 characters' })
-    .max(20, { message: 'Password can not be more than 20 characters' })
-    .optional(),
-
-  email: z
-    .string({
-      required_error: 'Email is required',
-    })
-    .trim()
-    .email({ message: 'Invalid email format' }),
-
-  name: createUserNameSchema,
-
-  gender: z.enum(['male', 'female', 'other'], {
-    errorMap: () => ({ message: 'Invalid gender' }),
-  }),
-
-  dateOfBirth: z
-    .string({
-      invalid_type_error: 'Date of birth must be string',
-    })
-    .trim()
-    .optional(),
-
-  contactNo: z
-    .string({
-      invalid_type_error: 'Contact No must be string',
-      required_error: 'Contact No is required',
-    })
-    .trim(),
-
-  emergencyContactNo: z
-    .string({
-      invalid_type_error: 'Emergency Contact No must be string',
-      required_error: 'Emergency Contact No is required',
-    })
-    .trim(),
-
-  bloodGroup: z
-    .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'], {
-      errorMap: () => ({ message: 'Invalid blood group' }),
-    })
-    .optional(),
-
-  presentAddress: z
-    .string({
-      invalid_type_error: 'Present address must be string',
-      required_error: 'Present address is required',
-    })
-    .trim(),
-
-  permanentAddress: z
-    .string({
-      invalid_type_error: 'Permanent address must be string',
-      required_error: 'Permanent address is required',
-    })
-    .trim(),
-
-  guardian: createGuardianSchema,
-
-  localGuardian: createLocalGuardianSchema,
-
-  profileImg: z
-    .string({
-      invalid_type_error: 'Profile image must be string',
-    })
-    .trim()
-    .optional(),
-
-  admissionSemester: z
-    .string({
-      invalid_type_error: 'AdmissionSemester must be string',
-    })
-    .trim()
-    .optional(),
-
-  isDeleted: z.boolean().optional().default(false),
-});
-
 const updateStudentValidationSchema = z.object({
   password: z
     .string({ invalid_type_error: 'password must be string' })
@@ -381,7 +385,13 @@ const updateStudentValidationSchema = z.object({
 
   admissionSemester: z
     .string({
-      invalid_type_error: 'AdmissionSemester must be string',
+      invalid_type_error: 'Admission semester must be string',
+    })
+    .trim()
+    .optional(),
+  academicDepartment: z
+    .string({
+      invalid_type_error: 'Academic department must be string',
     })
     .trim()
     .optional(),

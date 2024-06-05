@@ -5,9 +5,9 @@ import { StudentValidations } from './student.validator';
 
 const router = express.Router();
 
-router.get('/:studentId', StudentControllers.getSingleStudent);
-
 router.get('/', StudentControllers.getAllStudents);
+
+router.get('/:studentId', StudentControllers.getSingleStudent);
 
 router.patch(
   '/:studentId',

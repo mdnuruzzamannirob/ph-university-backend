@@ -5,12 +5,26 @@ import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 
 const getSingleStudentFromDB = async (id: string) => {
-  const result = await StudentModel.aggregate([{ $match: { id } }]);
+  const result = await StudentModel.findOne({ id })
+    .populate('admissionSemester')
+    .populate({
+      path: 'academicDepartment',
+      populate: {
+        path: 'academicFaculty',
+      },
+    });
   return result;
 };
 
 const getAllStudentsFromDB = async () => {
-  const result = await StudentModel.find();
+  const result = await StudentModel.find()
+    .populate('admissionSemester')
+    .populate({
+      path: 'academicDepartment',
+      populate: {
+        path: 'academicFaculty',
+      },
+    });
   return result;
 };
 
