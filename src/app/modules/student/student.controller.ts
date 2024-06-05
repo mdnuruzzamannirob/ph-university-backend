@@ -26,6 +26,18 @@ const getAllStudents = asyncFunctionHandler(async (req, res) => {
   });
 });
 
+const updateStudent = asyncFunctionHandler(async (req, res) => {
+  const { studentId } = req.params;
+  const result = await StudentServices.updateStudentInoDB(studentId, req.body);
+
+  responseHandler(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Student is updated successfully',
+    data: result,
+  });
+});
+
 const deleteStudent = asyncFunctionHandler(async (req, res) => {
   const { studentId } = req.params;
   const result = await StudentServices.deleteStudentFromDB(studentId);
@@ -41,5 +53,6 @@ const deleteStudent = asyncFunctionHandler(async (req, res) => {
 export const StudentControllers = {
   getAllStudents,
   getSingleStudent,
+  updateStudent,
   deleteStudent,
 };

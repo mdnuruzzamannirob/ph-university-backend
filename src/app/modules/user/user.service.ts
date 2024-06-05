@@ -1,3 +1,4 @@
+import { startSession } from 'mongoose';
 import config from '../../config';
 import { TAcademicSemester } from '../academicSemester/academicSemester.interface';
 import { AcademicSemesterModel } from '../academicSemester/academicSemester.model';
@@ -6,48 +7,64 @@ import { StudentModel } from '../student/student.model';
 import { TUser } from './user.interface';
 import { UserModel } from './user.model';
 import { generateStudentId } from './user.utils';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
-  // find email exist or not
-  const emailExists = await StudentModel.findOne({ email: payload.email });
-
-  if (emailExists) {
-    throw new Error('Email already exists !');
-  }
-
-  // find academic semester information
-  const admissionSemester = (await AcademicSemesterModel.findById(
-    payload.admissionSemester,
-  )) as TAcademicSemester | null;
-
-  if (!admissionSemester) {
-    throw new Error('Admission semester not found');
-  }
+  const session = await startSession();
 
   // create a user object
   const userData: Partial<TUser> = {};
 
-  // if password not given, use default password
-  userData.password = password || (config.default_password as string);
+  try {
+    session.startTransaction();
 
-  // set a role
-  userData.role = 'student';
+    // if password not given, use default password
+    userData.password = password || (config.default_password as string);
 
-  // set automatic generated id
-  userData.id = await generateStudentId(admissionSemester);
+    // set a role
+    userData.role = 'student';
 
-  const newUser = await UserModel.create(userData);
+    // find academic semester information
+    const admissionSemester = (await AcademicSemesterModel.findById(
+      payload.admissionSemester,
+    )) as TAcademicSemester | null;
 
-  if (newUser) {
+    if (!admissionSemester) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Admission semester not found');
+    }
+
+    // set automatic generated id
+    userData.id = await generateStudentId(admissionSemester);
+
+    const newUser = await UserModel.create([userData], { session }); // return array
+
+    if (!newUser.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to crete a new user');
+    }
+
     // set id , _id as user
-    payload.id = newUser.id;
-    payload.user = newUser._id;
+    payload.id = newUser[0].id;
+    payload.user = newUser[0]._id;
 
-    const newStudent = await StudentModel.create(payload);
+    const newStudent = await StudentModel.create([payload], { session }); // return array
+
+    if (!newStudent.length) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'Failed to crete a new student',
+      );
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+
     return newStudent;
+  } catch (error) {
+    await session.commitTransaction();
+    await session.endSession();
+    throw new Error('Failed to create a student');
   }
-
-  throw new Error('Failed to create a new user');
 };
 
 export const UserServices = {

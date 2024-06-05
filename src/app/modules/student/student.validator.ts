@@ -6,7 +6,7 @@ const objectId = z.string().refine((val) => Types.ObjectId.isValid(val), {
   message: 'Invalid ObjectId',
 });
 
-const userNameSchema = z.object({
+const createUserNameSchema = z.object({
   firstName: z
     .string({
       invalid_type_error: 'First Name must be string',
@@ -41,7 +41,7 @@ const userNameSchema = z.object({
     }),
 });
 
-const guardianSchema = z.object({
+const createGuardianSchema = z.object({
   fatherName: z
     .string({
       invalid_type_error: 'Father Name must be string',
@@ -85,7 +85,7 @@ const guardianSchema = z.object({
     .trim(),
 });
 
-const localGuardianSchema = z.object({
+const createLocalGuardianSchema = z.object({
   name: z
     .string({
       invalid_type_error: 'Name must be string',
@@ -115,6 +115,115 @@ const localGuardianSchema = z.object({
     .trim(),
 });
 
+const updateUserNameSchema = z.object({
+  firstName: z
+    .string({
+      invalid_type_error: 'First Name must be string',
+    })
+    .trim()
+    .min(1, { message: 'Name can not be less than 1 characters' })
+    .max(20, { message: 'Name can not be more than 20 characters' })
+    .refine((value) => /^[A-Z]/.test(value), {
+      message: 'First Name must start with a capital letter',
+    })
+    .optional(),
+
+  middleName: z
+    .string({ invalid_type_error: 'Middle Name must be string' })
+    .trim()
+    .max(20, { message: 'Name can not be more than 20 characters' })
+    .refine((value) => /^[A-Z]/.test(value), {
+      message: 'Middle Name must start with a capital letter',
+    })
+    .optional(),
+
+  lastName: z
+    .string({
+      invalid_type_error: 'Last Name must be string',
+    })
+    .trim()
+    .min(1, { message: 'Name can not be less than 1 characters' })
+    .max(20, { message: 'Name can not be more than 20 characters' })
+    .refine((value) => /^[A-Z]/.test(value), {
+      message: 'Last Name must start with a capital letter',
+    })
+    .optional(),
+});
+
+const updateGuardianSchema = z.object({
+  fatherName: z
+    .string({
+      invalid_type_error: 'Father Name must be string',
+    })
+    .trim()
+    .optional(),
+
+  fatherOccupation: z
+    .string({
+      invalid_type_error: 'Father occupation must be string',
+    })
+    .trim()
+    .optional(),
+
+  fatherContactNo: z
+    .string({
+      invalid_type_error: 'Father Contact No must be string',
+    })
+    .trim()
+    .optional(),
+
+  motherName: z
+    .string({
+      invalid_type_error: 'Mother name must be string',
+    })
+    .trim()
+    .optional(),
+
+  motherOccupation: z
+    .string({
+      invalid_type_error: 'Mother occupation must be string',
+    })
+    .trim()
+    .optional(),
+
+  motherContactNo: z
+    .string({
+      invalid_type_error: 'Mother Contact No must be string',
+    })
+    .trim()
+    .optional(),
+});
+
+const updateLocalGuardianSchema = z.object({
+  name: z
+    .string({
+      invalid_type_error: 'Name must be string',
+    })
+    .trim()
+    .optional(),
+
+  occupation: z
+    .string({
+      invalid_type_error: 'Occupation must be string',
+    })
+    .trim()
+    .optional(),
+
+  contactNo: z
+    .string({
+      invalid_type_error: 'Contact No must be string',
+    })
+    .trim()
+    .optional(),
+
+  address: z
+    .string({
+      invalid_type_error: 'Address must be string',
+    })
+    .trim()
+    .optional(),
+});
+
 const createStudentValidationSchema = z.object({
   password: z
     .string({ invalid_type_error: 'password must be string' })
@@ -129,7 +238,7 @@ const createStudentValidationSchema = z.object({
     .trim()
     .email({ message: 'Invalid email format' }),
 
-  name: userNameSchema,
+  name: createUserNameSchema,
 
   gender: z.enum(['male', 'female', 'other'], {
     errorMap: () => ({ message: 'Invalid gender' }),
@@ -176,9 +285,92 @@ const createStudentValidationSchema = z.object({
     })
     .trim(),
 
-  guardian: guardianSchema,
+  guardian: createGuardianSchema,
 
-  localGuardian: localGuardianSchema,
+  localGuardian: createLocalGuardianSchema,
+
+  profileImg: z
+    .string({
+      invalid_type_error: 'Profile image must be string',
+    })
+    .trim()
+    .optional(),
+
+  admissionSemester: z
+    .string({
+      invalid_type_error: 'AdmissionSemester must be string',
+    })
+    .trim()
+    .optional(),
+
+  isDeleted: z.boolean().optional().default(false),
+});
+
+const updateStudentValidationSchema = z.object({
+  password: z
+    .string({ invalid_type_error: 'password must be string' })
+    .min(8, { message: 'Password can not be less than 8 characters' })
+    .max(20, { message: 'Password can not be more than 20 characters' })
+    .optional(),
+
+  email: z
+    .string()
+    .trim()
+    .email({ message: 'Invalid email format' })
+    .optional(),
+
+  name: updateUserNameSchema,
+
+  gender: z
+    .enum(['male', 'female', 'other'], {
+      errorMap: () => ({ message: 'Invalid gender' }),
+    })
+    .optional(),
+
+  dateOfBirth: z
+    .string({
+      invalid_type_error: 'Date of birth must be string',
+    })
+    .trim()
+    .optional(),
+
+  contactNo: z
+    .string({
+      invalid_type_error: 'Contact No must be string',
+    })
+    .trim()
+    .optional(),
+
+  emergencyContactNo: z
+    .string({
+      invalid_type_error: 'Emergency Contact No must be string',
+    })
+    .trim()
+    .optional(),
+
+  bloodGroup: z
+    .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'], {
+      errorMap: () => ({ message: 'Invalid blood group' }),
+    })
+    .optional(),
+
+  presentAddress: z
+    .string({
+      invalid_type_error: 'Present address must be string',
+    })
+    .trim()
+    .optional(),
+
+  permanentAddress: z
+    .string({
+      invalid_type_error: 'Permanent address must be string',
+    })
+    .trim()
+    .optional(),
+
+  guardian: updateGuardianSchema,
+
+  localGuardian: updateLocalGuardianSchema,
 
   profileImg: z
     .string({
@@ -199,4 +391,5 @@ const createStudentValidationSchema = z.object({
 
 export const StudentValidations = {
   createStudentValidationSchema,
+  updateStudentValidationSchema,
 };
