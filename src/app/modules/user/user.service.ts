@@ -19,6 +19,13 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   try {
     session.startTransaction();
 
+    // find email exist or not
+    const emailExists = await StudentModel.findOne({ email: payload.email });
+
+    if (emailExists) {
+      throw new Error('Email already exists !');
+    }
+
     // if password not given, use default password
     userData.password = password || (config.default_password as string);
 
