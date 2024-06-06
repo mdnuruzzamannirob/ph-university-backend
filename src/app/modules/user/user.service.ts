@@ -11,38 +11,31 @@ import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
-  const session = await startSession();
-
   // create a user object
   const userData: Partial<TUser> = {};
 
+  // find email exist or not
+  const emailExists = await StudentModel.findOne({ email: payload.email });
+  if (emailExists) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Email already exists !');
+  }
+
+  // find academic semester information
+  const admissionSemester = (await AcademicSemesterModel.findById(
+    payload.admissionSemester,
+  )) as TAcademicSemester | null;
+  if (!admissionSemester) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Admission semester not found');
+  }
+
+  // if password not given, use default password
+  userData.password = password || (config.default_password as string);
+  // set automatic generated id
+  userData.id = await generateStudentId(admissionSemester);
+
+  const session = await startSession();
   try {
     session.startTransaction();
-
-    // find email exist or not
-    const emailExists = await StudentModel.findOne({ email: payload.email });
-
-    if (emailExists) {
-      throw new AppError(httpStatus.BAD_REQUEST, 'Email already exists !');
-    }
-
-    // if password not given, use default password
-    userData.password = password || (config.default_password as string);
-
-    // set a role
-    userData.role = 'student';
-
-    // find academic semester information
-    const admissionSemester = (await AcademicSemesterModel.findById(
-      payload.admissionSemester,
-    )) as TAcademicSemester | null;
-
-    if (!admissionSemester) {
-      throw new AppError(httpStatus.NOT_FOUND, 'Admission semester not found');
-    }
-
-    // set automatic generated id
-    userData.id = await generateStudentId(admissionSemester);
 
     const newUser = await UserModel.create([userData], { session }); // return array
 
@@ -51,8 +44,8 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     }
 
     // set id , _id as user
-    payload.id = newUser[0].id;
-    payload.user = newUser[0]._id;
+    payload.id = newUser[0]?.id;
+    payload.user = newUser[0]?._id;
 
     const newStudent = await StudentModel.create([payload], { session }); // return array
 
@@ -74,6 +67,18 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   }
 };
 
+const getSingleUserFromDB = async (id: string) => {
+  const result = await UserModel.findOne({ id });
+  return result;
+};
+
+const getAllUsersFromDB = async () => {
+  const result = await UserModel.find();
+  return result;
+};
+
 export const UserServices = {
   createStudentIntoDB,
+  getSingleUserFromDB,
+  getAllUsersFromDB,
 };

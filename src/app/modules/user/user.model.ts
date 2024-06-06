@@ -8,6 +8,7 @@ const userSchema = new Schema<TUser>(
     id: {
       type: String,
       required: true,
+      unique: true,
     },
     password: {
       type: String,
@@ -20,6 +21,7 @@ const userSchema = new Schema<TUser>(
     role: {
       type: String,
       enum: ['student', 'faculty', 'admin'],
+      default: 'student',
     },
     status: {
       type: String,
@@ -41,7 +43,7 @@ userSchema.pre('save', async function (next) {
 
   // hashing the password and save into db
   user.password = await bcrypt.hash(
-    user.password,
+    user?.password,
     Number(config.bcrypt_salt_rounds),
   );
   next();
@@ -50,6 +52,24 @@ userSchema.pre('save', async function (next) {
 // set password empty string after saving password
 userSchema.post('save', function (doc, next) {
   doc.password = '';
+  next();
+});
+
+// set password empty string after findOne password
+userSchema.post('findOne', function (doc, next) {
+  if (doc) {
+    doc.password = '';
+  }
+  next();
+});
+
+// set password empty string after find password
+userSchema.post('find', function (docs, next) {
+  if (docs && docs.length) {
+    docs.forEach((doc: TUser) => {
+      doc.password = '';
+    });
+  }
   next();
 });
 

@@ -10,5 +10,8 @@ router.post(
   requestValidationHandler(StudentValidations.createStudentValidationSchema),
   UserControllers.createStudent,
 );
+router.get('/', UserControllers.getAllUsers);
+
+router.get('/:userId', UserControllers.getSingleUser);
 
 export const UserRoutes = router;

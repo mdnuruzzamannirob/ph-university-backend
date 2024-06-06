@@ -7,6 +7,7 @@ import { NextFunction } from 'express';
 
 const getSingleStudentFromDB = async (id: string) => {
   const result = await StudentModel.findOne({ id })
+    .populate('user')
     .populate('admissionSemester')
     .populate({
       path: 'academicDepartment',
@@ -19,6 +20,7 @@ const getSingleStudentFromDB = async (id: string) => {
 
 const getAllStudentsFromDB = async () => {
   const result = await StudentModel.find()
+    .populate('user')
     .populate('admissionSemester')
     .populate({
       path: 'academicDepartment',
