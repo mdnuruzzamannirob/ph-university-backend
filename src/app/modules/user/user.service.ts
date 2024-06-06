@@ -23,7 +23,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     const emailExists = await StudentModel.findOne({ email: payload.email });
 
     if (emailExists) {
-      throw new Error('Email already exists !');
+      throw new AppError(httpStatus.BAD_REQUEST, 'Email already exists !');
     }
 
     // if password not given, use default password
@@ -67,10 +67,10 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     await session.endSession();
 
     return newStudent;
-  } catch (error) {
+  } catch (error: any) {
     await session.commitTransaction();
     await session.endSession();
-    throw new Error('Failed to create a student');
+    throw new AppError(httpStatus.BAD_REQUEST, error);
   }
 };
 

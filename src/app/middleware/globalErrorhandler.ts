@@ -1,18 +1,49 @@
-import { NextFunction, Request, Response } from 'express';
+import { ErrorRequestHandler } from 'express';
+import { zodErrorhandler } from '../errors/zodErrorHandler';
+import { TErrorSources } from '../interface/error';
+import config from '../config';
+import { ZodError } from 'zod';
+import AppError from '../errors/AppError';
 
-const globalErrorHandler = (
-  error: any,
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const status = error.status || 500;
-  const message = error.message || 'Something went wrong';
+const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
+  let status = 500;
+  let message = 'Something went wrong';
+  let errorSources: TErrorSources = [
+    {
+      path: '',
+      message: 'Something went wrong',
+    },
+  ];
+
+  if (error instanceof ZodError) {
+    const simplifiedError = zodErrorhandler(error);
+    status = simplifiedError.status;
+    message = simplifiedError.message;
+    errorSources = simplifiedError.errorSources;
+  } else if (error instanceof AppError) {
+    status = error?.status;
+    message = error.message;
+    errorSources = [
+      {
+        path: '',
+        message: error.message,
+      },
+    ];
+  } else if (error instanceof Error) {
+    message = error.message;
+    errorSources = [
+      {
+        path: '',
+        message: error.message,
+      },
+    ];
+  }
 
   return res.status(status).json({
     success: false,
     message,
-    error,
+    errorSources,
+    stack: config.NODE_ENV === 'development' ? error?.stack : null,
   });
 };
 

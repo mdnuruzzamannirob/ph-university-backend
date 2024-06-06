@@ -38,9 +38,9 @@ const updateStudent = asyncFunctionHandler(async (req, res) => {
   });
 });
 
-const deleteStudent = asyncFunctionHandler(async (req, res) => {
+const deleteStudent = asyncFunctionHandler(async (req, res, next) => {
   const { studentId } = req.params;
-  const result = await StudentServices.deleteStudentFromDB(studentId);
+  const result = await StudentServices.deleteStudentFromDB(studentId, next);
 
   responseHandler(res, {
     statusCode: httpStatus.OK,

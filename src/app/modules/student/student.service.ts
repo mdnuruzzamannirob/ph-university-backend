@@ -3,6 +3,7 @@ import { TStudent } from './student.interface';
 import { StudentModel } from './student.model';
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
+import { NextFunction } from 'express';
 
 const getSingleStudentFromDB = async (id: string) => {
   const result = await StudentModel.findOne({ id })
@@ -64,7 +65,7 @@ const updateStudentInoDB = async (id: string, payload: Partial<TStudent>) => {
   return result;
 };
 
-const deleteStudentFromDB = async (id: string) => {
+const deleteStudentFromDB = async (id: string, next: NextFunction) => {
   const session = await startSession();
 
   try {
@@ -87,7 +88,7 @@ const deleteStudentFromDB = async (id: string) => {
   } catch (error) {
     await session.commitTransaction();
     await session.endSession();
-    throw new Error('Failed to delete student');
+    next(error);
   }
 };
 
