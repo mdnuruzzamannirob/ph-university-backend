@@ -8,7 +8,7 @@ const createAcademicDepartment = asyncFunctionHandler(async (req, res) => {
     await AcademicDepartmentServices.createAcademicDepartmentIntoDB(req.body);
 
   responseHandler(res, {
-    statusCode: httpStatus.OK,
+    status: httpStatus.OK,
     success: true,
     message: 'Academic department is created successfully',
     data: result,
@@ -20,7 +20,7 @@ const getAllAcademicDepartment = asyncFunctionHandler(async (req, res) => {
     await AcademicDepartmentServices.getAllAcademicDepartmentFromDB();
 
   responseHandler(res, {
-    statusCode: httpStatus.OK,
+    status: httpStatus.OK,
     success: true,
     message: 'All Academic departments fetched successfully',
     data: result,
@@ -36,7 +36,7 @@ const getSingleAcademicDepartment = asyncFunctionHandler(async (req, res) => {
     );
 
   responseHandler(res, {
-    statusCode: httpStatus.OK,
+    status: httpStatus.OK,
     success: true,
     message: 'Academic department is fetched successfully',
     data: result,
@@ -53,7 +53,7 @@ const updateAcademicDepartment = asyncFunctionHandler(async (req, res) => {
     );
 
   responseHandler(res, {
-    statusCode: httpStatus.OK,
+    status: httpStatus.OK,
     success: true,
     message: 'Academic department is updated successfully',
     data: result,

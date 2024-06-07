@@ -14,7 +14,7 @@ app.use(cors());
 app.use('/api/v1', router);
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello Frontend. Ths is ph university backend!');
+  res.send('Hello Frontend. This ph university backend !');
 });
 
 // global error handler

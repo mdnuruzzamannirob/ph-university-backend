@@ -10,7 +10,7 @@ const createStudent = asyncFunctionHandler(async (req, res) => {
   const result = await UserServices.createStudentIntoDB(password, studentData);
 
   responseHandler(res, {
-    statusCode: httpStatus.OK,
+    status: httpStatus.OK,
     success: true,
     message: 'Student is created successfully',
     data: result,
@@ -22,7 +22,7 @@ const getSingleUser = asyncFunctionHandler(async (req, res) => {
   const result = await UserServices.getSingleUserFromDB(userId);
 
   responseHandler(res, {
-    statusCode: httpStatus.OK,
+    status: httpStatus.OK,
     success: true,
     message: 'User is retrieved successfully',
     data: result,
@@ -33,7 +33,7 @@ const getAllUsers = asyncFunctionHandler(async (req, res) => {
   const result = await UserServices.getAllUsersFromDB();
 
   responseHandler(res, {
-    statusCode: httpStatus.OK,
+    status: httpStatus.OK,
     success: true,
     message: 'User are retrieved successfully',
     data: result,

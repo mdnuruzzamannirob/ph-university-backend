@@ -9,7 +9,7 @@ const createAcademicFaculty = asyncFunctionHandler(async (req, res) => {
   );
 
   responseHandler(res, {
-    statusCode: httpStatus.OK,
+    status: httpStatus.OK,
     success: true,
     message: 'Academic faculty is created successfully',
     data: result,
@@ -20,7 +20,7 @@ const getAllAcademicFaculty = asyncFunctionHandler(async (req, res) => {
   const result = await AcademicFacultyServices.getAllAcademicFacultiesFromDB();
 
   responseHandler(res, {
-    statusCode: httpStatus.OK,
+    status: httpStatus.OK,
     success: true,
     message: 'All Academic faculties fetched successfully',
     data: result,
@@ -34,7 +34,7 @@ const getSingleAcademicFaculty = asyncFunctionHandler(async (req, res) => {
     await AcademicFacultyServices.getSingleAcademicFacultyFromDB(facultyId);
 
   responseHandler(res, {
-    statusCode: httpStatus.OK,
+    status: httpStatus.OK,
     success: true,
     message: 'Academic faculty is fetched successfully',
     data: result,
@@ -50,7 +50,7 @@ const updateAcademicFaculty = asyncFunctionHandler(async (req, res) => {
   );
 
   responseHandler(res, {
-    statusCode: httpStatus.OK,
+    status: httpStatus.OK,
     success: true,
     message: 'Academic faculty is updated successfully',
     data: result,

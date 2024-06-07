@@ -1,14 +1,8 @@
 import { Response } from 'express';
-
-type TResponse<T> = {
-  statusCode: number;
-  success: boolean;
-  message?: string;
-  data: T;
-};
+import { TResponse } from '../interface/response';
 
 const responseHandler = <T>(res: Response, data: TResponse<T>) => {
-  res.status(data?.statusCode).json({
+  res.status(data?.status).json({
     success: data.success,
     message: data.message,
     data: data.data,

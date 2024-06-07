@@ -4,6 +4,7 @@ import { TErrorSources } from '../interface/error';
 import config from '../config';
 import { ZodError } from 'zod';
 import AppError from '../errors/AppError';
+import { castErrorhandler } from '../errors/castErrorHandler';
 
 const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   let status = 500;
@@ -37,6 +38,11 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
         message: error.message,
       },
     ];
+  } else if (error.name === 'CastError') {
+    const simplifiedError = castErrorhandler(error);
+    status = simplifiedError.status;
+    message = simplifiedError.message;
+    errorSources = simplifiedError.errorSources;
   }
 
   return res.status(status).json({
