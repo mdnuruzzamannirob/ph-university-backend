@@ -5,6 +5,8 @@ import config from '../config';
 import { ZodError } from 'zod';
 import AppError from '../errors/AppError';
 import { castErrorhandler } from '../errors/castErrorHandler';
+import { validationErrorhandler } from '../errors/validationErrorHandler';
+import { duplicateErrorhandler } from '../errors/duplicateErrorHandler';
 
 const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   let status = 500;
@@ -38,8 +40,18 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
         message: error.message,
       },
     ];
+  } else if (error.name === 'ValidationError') {
+    const simplifiedError = validationErrorhandler(error);
+    status = simplifiedError.status;
+    message = simplifiedError.message;
+    errorSources = simplifiedError.errorSources;
   } else if (error.name === 'CastError') {
     const simplifiedError = castErrorhandler(error);
+    status = simplifiedError.status;
+    message = simplifiedError.message;
+    errorSources = simplifiedError.errorSources;
+  } else if (error.code === 11000) {
+    const simplifiedError = duplicateErrorhandler(error);
     status = simplifiedError.status;
     message = simplifiedError.message;
     errorSources = simplifiedError.errorSources;
