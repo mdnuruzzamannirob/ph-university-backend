@@ -16,7 +16,7 @@ const getSingleStudent = asyncFunctionHandler(async (req, res) => {
 });
 
 const getAllStudents = asyncFunctionHandler(async (req, res) => {
-  const result = await StudentServices.getAllStudentsFromDB();
+  const result = await StudentServices.getAllStudentsFromDB(req.query);
 
   responseHandler(res, {
     status: httpStatus.OK,

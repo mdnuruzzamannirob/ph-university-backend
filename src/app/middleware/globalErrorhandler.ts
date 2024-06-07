@@ -23,6 +23,21 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     status = simplifiedError.status;
     message = simplifiedError.message;
     errorSources = simplifiedError.errorSources;
+  } else if (error.name === 'ValidationError') {
+    const simplifiedError = validationErrorhandler(error);
+    status = simplifiedError.status;
+    message = simplifiedError.message;
+    errorSources = simplifiedError.errorSources;
+  } else if (error.name === 'CastError') {
+    const simplifiedError = castErrorhandler(error);
+    status = simplifiedError.status;
+    message = simplifiedError.message;
+    errorSources = simplifiedError.errorSources;
+  } else if (error.code === 11000) {
+    const simplifiedError = duplicateErrorhandler(error);
+    status = simplifiedError.status;
+    message = simplifiedError.message;
+    errorSources = simplifiedError.errorSources;
   } else if (error instanceof AppError) {
     status = error?.status;
     message = error.message;
@@ -40,21 +55,6 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
         message: error.message,
       },
     ];
-  } else if (error.name === 'ValidationError') {
-    const simplifiedError = validationErrorhandler(error);
-    status = simplifiedError.status;
-    message = simplifiedError.message;
-    errorSources = simplifiedError.errorSources;
-  } else if (error.name === 'CastError') {
-    const simplifiedError = castErrorhandler(error);
-    status = simplifiedError.status;
-    message = simplifiedError.message;
-    errorSources = simplifiedError.errorSources;
-  } else if (error.code === 11000) {
-    const simplifiedError = duplicateErrorhandler(error);
-    status = simplifiedError.status;
-    message = simplifiedError.message;
-    errorSources = simplifiedError.errorSources;
   }
 
   return res.status(status).json({
