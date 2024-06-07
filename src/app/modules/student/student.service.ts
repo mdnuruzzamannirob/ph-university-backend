@@ -4,6 +4,8 @@ import { StudentModel } from './student.model';
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { NextFunction } from 'express';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { studentSearchableFields } from './student.constant';
 
 const getSingleStudentFromDB = async (id: string) => {
   const result = await StudentModel.findOne({ id })
@@ -19,63 +21,26 @@ const getSingleStudentFromDB = async (id: string) => {
 };
 
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
-  // searching
-  let searchTerm = '';
-  if (query.searchTerm) searchTerm = query?.searchTerm as string;
+  const studentQuery = new QueryBuilder(
+    StudentModel.find()
+      .populate('user')
+      .populate('admissionSemester')
+      .populate({
+        path: 'academicDepartment',
+        populate: {
+          path: 'academicFaculty',
+        },
+      }),
+    query,
+  )
+    .search(studentSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
 
-  const searchQuery = StudentModel.find({
-    $or: ['email', 'name.firstName', 'presentAddress'].map((field) => ({
-      [field]: { $regex: searchTerm, $options: 'i' },
-    })),
-  });
-
-  // filtering
-  const queryObject = { ...query };
-
-  const excludeFields = ['searchTerm', 'sort', 'page', 'limit', 'fields'];
-  excludeFields.forEach((field) => delete queryObject[field]); // remove excludeFields
-
-  const filterQuery = searchQuery
-    .find(queryObject)
-    .populate('user')
-    .populate('admissionSemester')
-    .populate({
-      path: 'academicDepartment',
-      populate: {
-        path: 'academicFaculty',
-      },
-    });
-
-  // sorting
-  let sort = '-createdAt';
-  if (query.sort) sort = query.sort as string;
-
-  const sortQuery = filterQuery.sort(sort);
-
-  // paginating and limiting
-  let page = 1;
-  let limit = 1;
-  let skip = 0;
-
-  if (query.limit) limit = Number(query.limit);
-  if (query.page) {
-    page = Number(query.page);
-    skip = (page - 1) * limit;
-  }
-
-  const paginateQuery = sortQuery.skip(skip);
-
-  const limitQuery = paginateQuery.limit(limit);
-
-  // limiting
-  let fields = '-__v';
-
-  if (query.fields) {
-    fields = (query.fields as string).split(',').join(' ');
-  }
-
-  const fieldsQuery = await limitQuery.select(fields);
-  return fieldsQuery;
+  const result = await studentQuery.modelQuery;
+  return result;
 };
 
 const updateStudentInoDB = async (id: string, payload: Partial<TStudent>) => {
