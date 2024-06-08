@@ -18,28 +18,28 @@ const createStudent = asyncFunctionHandler(async (req, res) => {
 });
 
 const createFaculty = asyncFunctionHandler(async (req, res) => {
-  const studentData = req.body;
+  const facultyData = req.body;
   const { password } = req.body;
 
-  const result = await UserServices.createFacultyIntoDB(password, studentData);
+  const result = await UserServices.createFacultyIntoDB(password, facultyData);
 
   responseHandler(res, {
     status: httpStatus.OK,
     success: true,
-    message: 'Student is created successfully',
+    message: 'Faculty is created successfully',
     data: result,
   });
 });
 const createAdmin = asyncFunctionHandler(async (req, res) => {
-  const studentData = req.body;
+  const adminData = req.body;
   const { password } = req.body;
 
-  const result = await UserServices.createAdminIntoDB(password, studentData);
+  const result = await UserServices.createAdminIntoDB(password, adminData);
 
   responseHandler(res, {
     status: httpStatus.OK,
     success: true,
-    message: 'Student is created successfully',
+    message: 'Admin is created successfully',
     data: result,
   });
 });
