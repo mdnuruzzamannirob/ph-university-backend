@@ -17,6 +17,33 @@ const createStudent = asyncFunctionHandler(async (req, res) => {
   });
 });
 
+const createFaculty = asyncFunctionHandler(async (req, res) => {
+  const studentData = req.body;
+  const { password } = req.body;
+
+  const result = await UserServices.createFacultyIntoDB(password, studentData);
+
+  responseHandler(res, {
+    status: httpStatus.OK,
+    success: true,
+    message: 'Student is created successfully',
+    data: result,
+  });
+});
+const createAdmin = asyncFunctionHandler(async (req, res) => {
+  const studentData = req.body;
+  const { password } = req.body;
+
+  const result = await UserServices.createAdminIntoDB(password, studentData);
+
+  responseHandler(res, {
+    status: httpStatus.OK,
+    success: true,
+    message: 'Student is created successfully',
+    data: result,
+  });
+});
+
 const getSingleUser = asyncFunctionHandler(async (req, res) => {
   const { userId } = req.params;
   const result = await UserServices.getSingleUserFromDB(userId);
@@ -30,7 +57,7 @@ const getSingleUser = asyncFunctionHandler(async (req, res) => {
 });
 
 const getAllUsers = asyncFunctionHandler(async (req, res) => {
-  const result = await UserServices.getAllUsersFromDB();
+  const result = await UserServices.getAllUsersFromDB(req?.query);
 
   responseHandler(res, {
     status: httpStatus.OK,
@@ -42,6 +69,8 @@ const getAllUsers = asyncFunctionHandler(async (req, res) => {
 
 export const UserControllers = {
   createStudent,
+  createFaculty,
+  createAdmin,
   getSingleUser,
   getAllUsers,
 };

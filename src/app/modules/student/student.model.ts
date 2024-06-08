@@ -6,7 +6,7 @@ import {
   TUserName,
 } from './student.interface';
 
-const userNameSchema = new Schema<TUserName>({
+const studentNameSchema = new Schema<TUserName>({
   firstName: {
     type: String,
     required: [true, 'First Name is required'],
@@ -90,7 +90,7 @@ const studentSchema = new Schema<TStudent>(
       unique: true,
     },
     name: {
-      type: userNameSchema,
+      type: studentNameSchema,
       required: [true, 'Name is required'],
     },
     gender: {

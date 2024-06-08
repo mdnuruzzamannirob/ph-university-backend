@@ -1,12 +1,11 @@
-import { Types } from 'mongoose';
 import { z } from 'zod';
 
 // Custom Zod validator for MongoDB ObjectID
-const objectId = z.string().refine((val) => Types.ObjectId.isValid(val), {
-  message: 'Invalid ObjectId',
-});
+// const objectId = z.string().refine((val) => Types.ObjectId.isValid(val), {
+//   message: 'Invalid ObjectId',
+// });
 
-const createUserNameSchema = z.object({
+const createStudentNameSchema = z.object({
   firstName: z
     .string({
       invalid_type_error: 'First Name must be string',
@@ -129,7 +128,7 @@ const createStudentValidationSchema = z.object({
     .trim()
     .email({ message: 'Invalid email format' }),
 
-  name: createUserNameSchema,
+  name: createStudentNameSchema,
 
   gender: z.enum(['male', 'female', 'other'], {
     errorMap: () => ({ message: 'Invalid gender' }),
@@ -201,7 +200,7 @@ const createStudentValidationSchema = z.object({
   isDeleted: z.boolean().optional().default(false),
 });
 
-const updateUserNameSchema = z.object({
+const updateStudentNameSchema = z.object({
   firstName: z
     .string({
       invalid_type_error: 'First Name must be string',
@@ -323,7 +322,7 @@ const updateStudentValidationSchema = z.object({
     .email({ message: 'Invalid email format' })
     .optional(),
 
-  name: updateUserNameSchema,
+  name: updateStudentNameSchema,
 
   gender: z
     .enum(['male', 'female', 'other'], {
