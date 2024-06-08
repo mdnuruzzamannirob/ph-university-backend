@@ -10,6 +10,8 @@ import { generateStudentId } from './user.utils';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { AcademicDepartmentModel } from '../academicDepartment/academicDepartment.model';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { userSearchableFields } from './user.constant';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // create a user object
@@ -79,13 +81,20 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   }
 };
 
-const getSingleUserFromDB = async (id: string) => {
-  const result = await UserModel.findOne({ id });
+const getAllUsersFromDB = async (query: Record<string, unknown>) => {
+  const userQuery = new QueryBuilder(UserModel.find(), query)
+    .search(userSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await userQuery.modelQuery;
   return result;
 };
 
-const getAllUsersFromDB = async () => {
-  const result = await UserModel.find();
+const getSingleUserFromDB = async (id: string) => {
+  const result = await UserModel.findOne({ id });
   return result;
 };
 

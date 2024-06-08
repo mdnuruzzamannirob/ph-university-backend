@@ -17,7 +17,7 @@ const createAcademicDepartment = asyncFunctionHandler(async (req, res) => {
 
 const getAllAcademicDepartment = asyncFunctionHandler(async (req, res) => {
   const result =
-    await AcademicDepartmentServices.getAllAcademicDepartmentFromDB();
+    await AcademicDepartmentServices.getAllAcademicDepartmentFromDB(req?.query);
 
   responseHandler(res, {
     status: httpStatus.OK,

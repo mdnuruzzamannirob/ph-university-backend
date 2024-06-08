@@ -17,7 +17,9 @@ const createAcademicSemester = asyncFunctionHandler(async (req, res) => {
 });
 
 const getAllAcademicSemester = asyncFunctionHandler(async (req, res) => {
-  const result = await AcademicSemesterServices.getAllAcademicSemesterFromDB();
+  const result = await AcademicSemesterServices.getAllAcademicSemesterFromDB(
+    req?.query,
+  );
 
   responseHandler(res, {
     status: httpStatus.OK,

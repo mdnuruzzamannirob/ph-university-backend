@@ -17,7 +17,9 @@ const createAcademicFaculty = asyncFunctionHandler(async (req, res) => {
 });
 
 const getAllAcademicFaculty = asyncFunctionHandler(async (req, res) => {
-  const result = await AcademicFacultyServices.getAllAcademicFacultiesFromDB();
+  const result = await AcademicFacultyServices.getAllAcademicFacultiesFromDB(
+    req?.query,
+  );
 
   responseHandler(res, {
     status: httpStatus.OK,

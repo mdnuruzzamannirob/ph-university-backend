@@ -30,3 +30,11 @@ export const academicSemesterNameCodeChecker: TAcademicSemesterNameCodeChecker =
     Summer: '02',
     Fall: '03',
   };
+
+export const semesterSearchableFields = [
+  'name',
+  'year',
+  'code',
+  'startMonth',
+  'endMonth',
+];
