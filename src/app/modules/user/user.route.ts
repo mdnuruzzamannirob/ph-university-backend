@@ -16,12 +16,12 @@ router.post(
 router.post(
   '/create-faculty',
   requestValidationHandler(FacultyValidations.createFacultyValidationSchema),
-  UserControllers.createStudent,
+  UserControllers.createFaculty,
 );
 router.post(
   '/create-admin',
   requestValidationHandler(AdminValidations.createAdminValidationSchema),
-  UserControllers.createStudent,
+  UserControllers.createAdmin,
 );
 
 router.get('/', UserControllers.getAllUsers);
