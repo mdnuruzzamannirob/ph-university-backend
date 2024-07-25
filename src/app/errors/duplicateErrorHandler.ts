@@ -1,7 +1,9 @@
 import { TErrorSources, TGenericErrorResponse } from '../interface/error';
 import httpStatus from 'http-status';
 
-export const duplicateErrorhandler = (error: any): TGenericErrorResponse => {
+export const duplicateErrorhandler = (error: {
+  message: string;
+}): TGenericErrorResponse => {
   // Extract value within double quotes using regex
   const match = error.message.match(/"([^"]*)"/);
 
@@ -17,7 +19,7 @@ export const duplicateErrorhandler = (error: any): TGenericErrorResponse => {
 
   return {
     status: httpStatus.BAD_REQUEST,
-    message: 'Invalid Id',
+    message: 'Invalid ID',
     errorSources,
   };
 };

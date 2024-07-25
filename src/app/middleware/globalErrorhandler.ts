@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ErrorRequestHandler } from 'express';
 import { zodErrorhandler } from '../errors/zodErrorHandler';
 import { TErrorSources } from '../interface/error';
@@ -10,11 +11,11 @@ import { duplicateErrorhandler } from '../errors/duplicateErrorHandler';
 
 const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   let status = 500;
-  let message = 'Something went wrong';
+  let message = 'Something went wrong !';
   let errorSources: TErrorSources = [
     {
       path: '',
-      message: 'Something went wrong',
+      message: 'Something went wrong !',
     },
   ];
 
@@ -62,7 +63,7 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     message,
     errorSources,
     stack: config.NODE_ENV === 'development' ? error?.stack : null,
-  });
+  }); // return pattern
 };
 
 export default globalErrorHandler;

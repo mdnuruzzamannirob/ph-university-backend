@@ -14,7 +14,7 @@ export const castErrorhandler = (
 
   return {
     status: httpStatus.BAD_REQUEST,
-    message: 'Invalid Id',
+    message: 'Invalid ID',
     errorSources,
   };
 };

@@ -106,10 +106,10 @@ const updateCourseIntoDB = async (_id: string, payload: Partial<TCourse>) => {
     );
 
     return result;
-  } catch (error: any) {
+  } catch (error) {
     await session.abortTransaction();
     await session.endSession();
-    throw new AppError(httpStatus.BAD_REQUEST, error);
+    throw new AppError(httpStatus.BAD_REQUEST, error as string);
   }
 };
 

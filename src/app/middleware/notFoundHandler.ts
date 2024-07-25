@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { TErrorSources } from '../interface/error';
 
 const notFoundHandler = (req: Request, res: Response, next: NextFunction) => {
-  let errorSources: TErrorSources = [
+  const errorSources: TErrorSources = [
     {
       path: '',
       message: 'API Not Found !',
