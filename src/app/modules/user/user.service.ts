@@ -84,10 +84,10 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     await session.endSession();
 
     return newStudent;
-  } catch (error: any) {
+  } catch (error) {
     await session.commitTransaction();
     await session.endSession();
-    throw new AppError(httpStatus.BAD_REQUEST, error);
+    throw new AppError(httpStatus.BAD_REQUEST, error as string);
   }
 };
 
@@ -155,10 +155,10 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
     await session.endSession();
 
     return newFaculty;
-  } catch (error: any) {
+  } catch (error) {
     await session.commitTransaction();
     await session.endSession();
-    throw new AppError(httpStatus.BAD_REQUEST, error);
+    throw new AppError(httpStatus.BAD_REQUEST, error as string);
   }
 };
 
@@ -218,10 +218,10 @@ const createAdminIntoDB = async (password: string, payload: TAdmin) => {
     await session.endSession();
 
     return newAdmin;
-  } catch (error: any) {
+  } catch (error) {
     await session.commitTransaction();
     await session.endSession();
-    throw new AppError(httpStatus.BAD_REQUEST, error);
+    throw new AppError(httpStatus.BAD_REQUEST, error as string);
   }
 };
 

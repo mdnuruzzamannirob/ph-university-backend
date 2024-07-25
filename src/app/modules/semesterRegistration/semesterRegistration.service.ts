@@ -1,14 +1,43 @@
+import httpStatus from 'http-status';
 import QueryBuilder from '../../builder/QueryBuilder';
+import { registrationStatus } from './semesterRegistration.constant';
 import { TSemesterRegistration } from './semesterRegistration.interface';
 import { SemesterRegistrationModel } from './semesterRegistration.model';
+import AppError from '../../errors/AppError';
+import { AcademicSemesterModel } from '../academicSemester/academicSemester.model';
 
 const createSemesterRegistrationIntoDB = async (
   payload: TSemesterRegistration,
 ) => {
-  // semester name equal semester code checker
-  //   if (academicSemesterNameCodeChecker[payload.name] !== payload.code) {
-  //     throw new Error('Invalid Semester Code !');
-  //   }
+  const { academicSemester } = payload;
+
+  const isThereAnyUpcomingOrOngoingSemester =
+    await SemesterRegistrationModel.findOne({
+      $or: [
+        { status: registrationStatus.UPCOMING },
+        { status: registrationStatus.ONGOING },
+      ],
+    });
+
+  //check if there any registered semester that is already 'UPCOMING'|'ONGOING'
+  if (isThereAnyUpcomingOrOngoingSemester) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `There is already an ${isThereAnyUpcomingOrOngoingSemester.status} registered semester !`,
+    );
+  }
+
+  //
+  const isAcademicSemesterExists =
+    await AcademicSemesterModel.findById(academicSemester);
+
+  //check if there any registered semester that is already 'UPCOMING'|'ONGOING'
+  if (isAcademicSemesterExists) {
+    throw new AppError(
+      httpStatus.CONFLICT,
+      'This semester is already registered!',
+    );
+  }
 
   const result = await SemesterRegistrationModel.create(payload);
   return result;
